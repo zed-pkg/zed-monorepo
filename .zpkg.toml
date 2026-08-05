@@ -1,0 +1,31 @@
+[package]
+org = "zed-pkg"
+name = "zed-monorepo"
+version = "0.1.0"
+description = "Pinned integration workspace for the zed-pkg repository fleet"
+license = "MIT"
+keywords = ["monorepo", "submodules", "integration", "workspace"]
+
+[package.repository]
+vcs = "git"
+url = "https://github.com/zed-pkg/zed-monorepo"
+
+[install]
+dir = ".vendor/.zed"
+
+# Reusable package edges only. zed-cli is tooling and zed-infra is operations;
+# both may remain pinned git submodules but must never be Zed dependencies here.
+[dependencies]
+"zed-pkg/zed-interfaces" = "^0.1.0"
+"zed-pkg/zed-clients-repository" = "^0.1.0"
+"zed-pkg/zed-sync" = "^0.1.0"
+
+[targets.repository]
+dir = "."
+adapter = "none"
+
+[publish]
+include_readme = true
+tag_format = "v{version}"
+exclude = ["apps/**", ".env", ".env.*", "tmp/**", "**/*.log"]
+smoke_test = "test -f \"$ZED_PKG_TEST_TARGET/.gitmodules\" && test -f \"$ZED_PKG_TEST_TARGET/submodules.toml\" && python3 \"$ZED_PKG_TEST_TARGET/scripts/check-zed-submodule-boundaries.py\""
