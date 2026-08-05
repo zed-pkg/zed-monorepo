@@ -172,12 +172,7 @@ fn call_tool(params: &Value) -> RpcResult {
             let code = arguments
                 .get("code")
                 .and_then(Value::as_str)
-                .ok_or_else(|| {
-                    (
-                        -32602,
-                        "zed_explain_diagnostic requires `code`".to_owned(),
-                    )
-                })?;
+                .ok_or_else(|| (-32602, "zed_explain_diagnostic requires `code`".to_owned()))?;
             let explanation = explain_code(code);
             Ok(tool_success(
                 explanation.clone(),
@@ -188,7 +183,9 @@ fn call_tool(params: &Value) -> RpcResult {
     }
 }
 
-fn inspect_from_arguments(arguments: &Value) -> std::result::Result<crate::model::ProjectReport, (i64, String)> {
+fn inspect_from_arguments(
+    arguments: &Value,
+) -> std::result::Result<crate::model::ProjectReport, (i64, String)> {
     let root = arguments
         .get("root")
         .and_then(Value::as_str)

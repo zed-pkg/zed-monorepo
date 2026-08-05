@@ -218,8 +218,16 @@ mod tests {
         ];
         let actions = actions_for(&diagnostics);
 
-        assert!(actions.iter().any(|action| action.id == "restore-lock-only"));
-        assert!(!actions.iter().any(|action| action.id == "initialize-zed-package"));
+        assert!(
+            actions
+                .iter()
+                .any(|action| action.id == "restore-lock-only")
+        );
+        assert!(
+            !actions
+                .iter()
+                .any(|action| action.id == "initialize-zed-package")
+        );
     }
 
     #[test]
