@@ -2,7 +2,6 @@ use crate::model::{
     CliState, PackageState, ProjectReport, Severity, actions_for, diagnostic, summarize,
 };
 use anyhow::{Context, Result};
-use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
