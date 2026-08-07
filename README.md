@@ -12,6 +12,7 @@ apps/
   zed-web-server.rs/    registry web UI (MASH)
   zed-clients/          fourteen maintained SDK slices, including WASM and TypeScript for Node.js/Deno/Bun/edge
   zed-clients/          ten SDKs: Rust/WASM/TypeScript/Python/Go/Dart/Gleam/Erlang/Java/Swift
+  zed-clients/          polyglot SDKs and native package targets
   zed-sync/             offline-first sync engine
   zed-docs/             architecture and operator documentation
   zed-e2e/              browser and cross-service test suites
@@ -61,6 +62,31 @@ make status     # show recursive pinned-submodule status
 ```
 
 ## Why siblings under `apps/`
+## Zed package and submodule boundaries
+
+The monorepo is a Zed package, but Zed dependencies and git submodules are not
+the same graph:
+
+- `.gitmodules` pins the exact editable source composition.
+- `.zpkg.toml` imports only reusable packages: `zed-interfaces`, the clients
+  repository target, and `zed-sync`.
+- `submodules.toml` classifies every gitlink as reusable, application, test,
+  documentation, website, tooling, or operations.
+
+`zed-cli` remains a `tooling` submodule and `zed-infra` remains an `operations`
+submodule. Neither is imported by `.zpkg.toml`. This keeps local/integration
+workflows intact without turning deployment or command-line code into reusable
+monorepo dependencies.
+
+```sh
+python3 scripts/check-zed-submodule-boundaries.py
+```
+
+The checker rejects unclassified gitlinks, reusable submodules without matching
+Zed dependencies, extra reusable dependencies without submodules, and any
+`*-infra` or `*-cli` dependency.
+
+## Why siblings under apps/
 
 `zed-api-server.rs` and `zed-web-server.rs` declare
 `zed-interfaces = { path = "../zed-interfaces" }`. With every retained repo as

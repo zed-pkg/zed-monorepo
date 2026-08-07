@@ -1,0 +1,34 @@
+name: Zed submodule boundaries
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".gitmodules"
+      - ".zpkg.toml"
+      - ".zpkg.lock"
+      - "submodules.toml"
+      - "scripts/check-zed-submodule-boundaries.py"
+      - ".github/workflows/zed-submodule-boundaries.yml"
+  pull_request:
+    paths:
+      - ".gitmodules"
+      - ".zpkg.toml"
+      - ".zpkg.lock"
+      - "submodules.toml"
+      - "scripts/check-zed-submodule-boundaries.py"
+      - ".github/workflows/zed-submodule-boundaries.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  boundaries:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Validate package/submodule boundaries
+        run: python3 scripts/check-zed-submodule-boundaries.py

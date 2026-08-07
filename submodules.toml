@@ -1,0 +1,34 @@
+version = 1
+
+[submodules."apps/zed-interfaces"]
+role = "reusable"
+package = "zed-pkg/zed-interfaces"
+
+[submodules."apps/zed-clients"]
+role = "reusable"
+package = "zed-pkg/zed-clients-repository"
+
+[submodules."apps/zed-sync"]
+role = "reusable"
+package = "zed-pkg/zed-sync"
+
+[submodules."apps/zed-api-server.rs"]
+role = "application"
+
+[submodules."apps/zed-web-server.rs"]
+role = "application"
+
+[submodules."apps/zed-cli"]
+role = "tooling"
+
+[submodules."apps/zed-infra"]
+role = "operations"
+
+[submodules."apps/zed-docs"]
+role = "documentation"
+
+[submodules."apps/zed-pkg.github.io"]
+role = "website"
+
+[submodules."apps/zed-e2e"]
+role = "test"
