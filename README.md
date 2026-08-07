@@ -11,6 +11,7 @@ apps/
   zed-api-server.rs/    registry REST API
   zed-web-server.rs/    registry web UI (MASH)
   zed-clients/          fourteen maintained SDK slices, including WASM and TypeScript for Node.js/Deno/Bun/edge
+  zed-clients/          ten SDKs: Rust/WASM/TypeScript/Python/Go/Dart/Gleam/Erlang/Java/Swift
   zed-sync/             offline-first sync engine
   zed-docs/             architecture and operator documentation
   zed-e2e/              browser and cross-service test suites
@@ -92,6 +93,16 @@ Deno, Bun, and edge runtimes.
 [`scripts/check-portfolio-inventory.py`](scripts/check-portfolio-inventory.py)
 verifies the README inventory, real `160000` gitlinks, the dependency-free Zed
 package envelope, lockfile format, and the permanent exclusion of CLI/infra.
+
+## Portfolio inventory ratchet
+
+`.gitmodules` is the executable source of truth for the exact sibling set.
+[`scripts/check-portfolio-inventory.py`](scripts/check-portfolio-inventory.py)
+compares those gitlinks with the human-readable `apps/` inventory above and
+fails on missing, duplicate, renamed, or undocumented repositories. The check
+is deliberately narrower than the full governed-fleet catalog in DEN-627: it
+protects this exact pinned integration set without creating a second portfolio
+registry.
 
 ## License
 
