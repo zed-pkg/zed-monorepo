@@ -4,3 +4,5 @@ tmp
 temp
 tmp/worktrees
 temp/worktrees
+/apps/zed-cli/
+/apps/zed-infra/
