@@ -40,7 +40,7 @@ services:
       context: apps
       dockerfile: zed-api-server.rs/Dockerfile
       args:
-        ZED_API_REVISION: ${ZED_API_REVISION:-b8cb3864f278daf716854e0019ac39e70696ab6a}
+        ZED_API_REVISION: ${ZED_API_REVISION:-0ab2e31bfedf102dc61a11f6b246e01f30dda49d}
         ZED_INTERFACES_REVISION: ${API_INTERFACES_REVISION:-4b87e425b04777b0ee413971dc1df805d24f295f}
         ZED_LIB_CORE_REVISION: ${API_LIB_CORE_REVISION:-c3d486a1519381276fbec02aa25247f542924443}
     depends_on:
@@ -64,7 +64,7 @@ services:
       context: apps
       dockerfile: zed-web-server.rs/Dockerfile
       args:
-        ZED_WEB_REVISION: ${ZED_WEB_REVISION:-e6ad99ffb7871df1519db2ae4dfc2bf8ffe0d439}
+        ZED_WEB_REVISION: ${ZED_WEB_REVISION:-dd7d0998e0ab7fc5ccf55cb350c261a074901df4}
         ZED_INTERFACES_REVISION: ${WEB_INTERFACES_REVISION:-7d31f80dd8a310f218931165a3ad636a2f32b932}
         ZED_LIB_CORE_REVISION: ${WEB_LIB_CORE_REVISION:-c3d486a1519381276fbec02aa25247f542924443}
     depends_on:
