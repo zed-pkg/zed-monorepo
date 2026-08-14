@@ -3,14 +3,15 @@
 Pinned integration workspace for [zed-pkg](https://zpkg.tech). This repository
 is both a Zed package envelope and a git-submodule workspace. The retained
 repositories are pinned as real gitlinks under `apps/`, in the sibling layout
-required by the Rust services' `../zed-interfaces` path dependency.
+used by aggregate validation and parent-context container builds.
 
 ```
 apps/
   zed-interfaces/       contract crate shared by the Rust services
+  zed-lib-core/         canonical shared persistence and domain core
   zed-api-server.rs/    registry REST API
   zed-web-server.rs/    registry web UI (MASH)
-  zed-clients/          fourteen maintained SDK slices, including WASM and TypeScript for Node.js/Deno/Bun/edge
+  zed-clients/          seventeen maintained language targets, including C/C++/Zig, WASM, and TypeScript runtimes
   zed-sync/             offline-first sync engine
   zed-docs/             architecture and operator documentation
   zed-e2e/              browser and cross-service test suites
@@ -61,13 +62,15 @@ make status     # show recursive pinned-submodule status
 
 ## Why siblings under `apps/`
 
-`zed-api-server.rs` and `zed-web-server.rs` declare
-`zed-interfaces = { path = "../zed-interfaces" }`. With every retained repo as
-a sibling under `apps/`, that path resolves for local Cargo builds and for the
-Docker builds, whose context is `apps/`:
+The Rust services deliberately pin reviewed `zed-interfaces` and
+`zed-lib-core` Git revisions in their Cargo manifests and lockfiles. The
+monorepo gitlinks record the current exact portfolio release set without
+silently rewriting those component-owned dependency pins. Keeping the sources
+as siblings under `apps/` also supplies the parent-context inputs required by
+the API container build:
 
 ```sh
-docker build -f apps/zed-api-server.rs/Dockerfile -t ghcr.io/zed-pkg/zed-api-server:dev apps
+make images
 ```
 
 ## Deterministic integration CI
@@ -81,10 +84,10 @@ smuggling the CLI back into this workspace.
 
 ## Client matrix
 
-`zed-clients` carries fourteen maintained SDK slices: Rust, Rust/WASM,
-TypeScript, Python 3, Go, Dart, Gleam, Erlang, Elixir, Java, Kotlin, Ruby, PHP,
-and Swift. Its TypeScript package exposes explicit entry points for Node.js,
-Deno, Bun, and edge runtimes.
+`zed-clients` carries seventeen maintained language targets: C, C++, Dart,
+Elixir, Erlang, Gleam, Go, Java, Kotlin, Node.js/TypeScript, PHP, Python, Ruby,
+Rust, Swift, WASM, and Zig. The TypeScript package exposes explicit entry
+points for Node.js, Deno, Bun, and edge runtimes.
 
 ## Portfolio inventory ratchet
 

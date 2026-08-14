@@ -44,6 +44,7 @@ jobs:
         with:
           workspaces: |
             apps/zed-interfaces
+            apps/zed-lib-core
             apps/zed-api-server.rs
             apps/zed-web-server.rs
       - name: Report the pinned combination
@@ -51,6 +52,9 @@ jobs:
       - name: zed-interfaces contract
         run: cargo test
         working-directory: apps/zed-interfaces
+      - name: zed-lib-core
+        run: cargo test --workspace
+        working-directory: apps/zed-lib-core
       - name: zed-api-server.rs
         run: cargo test --workspace
         working-directory: apps/zed-api-server.rs

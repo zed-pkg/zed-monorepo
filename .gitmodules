@@ -30,3 +30,7 @@
 	path = apps/zed-e2e
 	url = https://github.com/zed-pkg/zed-e2e.git
 	branch = main
+[submodule "apps/zed-lib-core"]
+	path = apps/zed-lib-core
+	url = https://github.com/zed-pkg/zed-lib-core.git
+	branch = main

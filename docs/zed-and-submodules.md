@@ -12,8 +12,9 @@ strict single-owner rule.
 - `zed-cli` and `zed-infra` are intentionally absent from both mechanisms.
   The CLI consumes package layers independently; infrastructure owns deployment
   state outside this source-composition repository.
-- The retained `apps/zed-interfaces` gitlink is intentional because both Rust
-  services currently use the sibling path dependency `../zed-interfaces`.
+- The retained `apps/zed-interfaces` and `apps/zed-lib-core` gitlinks record
+  exact portfolio revisions and supply the API container's verified
+  parent-context sources. Each service still owns its immutable Cargo Git pins.
 - Every retained gitlink is pinned to an exact reviewed commit. `branch = main`
   is update metadata only and does not weaken the checked-in pin.
 

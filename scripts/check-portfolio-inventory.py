@@ -17,6 +17,7 @@ LOCK = ROOT / ".zpkg.lock"
 
 EXPECTED = {
     "zed-interfaces",
+    "zed-lib-core",
     "zed-api-server.rs",
     "zed-web-server.rs",
     "zed-clients",
@@ -124,14 +125,14 @@ def main() -> None:
     for forbidden_path in ("apps/zed-cli/", "apps/zed-infra/"):
         if forbidden_path in readme or forbidden_path in GITMODULES.read_text(encoding="utf-8"):
             fail(f"forbidden monorepo import returned: {forbidden_path}")
-    if "fourteen maintained SDK slices" not in readme:
-        fail("README must name the reviewed fourteen-slice SDK matrix")
+    if "seventeen maintained language targets" not in readme:
+        fail("README must name the reviewed seventeen-target SDK matrix")
     for runtime in ("Node.js", "Deno", "Bun", "edge"):
         if runtime not in readme:
             fail(f"README must name the TypeScript {runtime} runtime")
 
     check_zed_package()
-    print("zed-monorepo package boundary matches 8 exact gitlinks")
+    print("zed-monorepo package boundary matches 9 exact gitlinks")
 
 
 if __name__ == "__main__":

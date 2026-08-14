@@ -37,7 +37,7 @@ normalize_github_repo() {
   printf '%s\n' "${value,,}"
 }
 
-expected_paths=$'apps/zed-api-server.rs\napps/zed-clients\napps/zed-docs\napps/zed-e2e\napps/zed-interfaces\napps/zed-pkg.github.io\napps/zed-sync\napps/zed-web-server.rs'
+expected_paths=$'apps/zed-api-server.rs\napps/zed-clients\napps/zed-docs\napps/zed-e2e\napps/zed-interfaces\napps/zed-lib-core\napps/zed-pkg.github.io\napps/zed-sync\napps/zed-web-server.rs'
 actual_paths="$(git config -f .gitmodules --get-regexp '^submodule\..*\.path$' | awk '{print $2}' | sort -u)"
 [[ "$actual_paths" == "$expected_paths" ]] || {
   echo 'unexpected Git-submodule inventory' >&2
@@ -66,7 +66,7 @@ while read -r key url; do
   fi
 done < <(git config -f .gitmodules --get-regexp '^submodule\..*\.url$')
 
-path_count="$(printf '%s\n' "$actual_paths" | sed '/^$/d' | wc -l | tr -d ' ')"
+path_count="$(printf '%s\n' "$actual_paths" | awk 'NF { count++ } END { print count + 0 }')"
 branch_count="$(git config -f .gitmodules --get-regexp '^submodule\..*\.branch$' | wc -l | tr -d ' ')"
 [[ "$branch_count" == "$path_count" ]] || { echo 'each submodule must declare branch = main metadata' >&2; exit 1; }
 if git config -f .gitmodules --get-regexp '^submodule\..*\.branch$' | awk '$2 != "main" { bad=1 } END { exit bad ? 0 : 1 }'; then
