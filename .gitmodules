@@ -34,3 +34,7 @@
 	path = apps/zed-lib-core
 	url = https://github.com/zed-pkg/zed-lib-core.git
 	branch = main
+[submodule "apps/zed-sidecar.rs"]
+	path = apps/zed-sidecar.rs
+	url = https://github.com/zed-pkg/zed-sidecar.rs.git
+	branch = main
