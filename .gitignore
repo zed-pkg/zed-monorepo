@@ -11,3 +11,8 @@ temp/worktrees
 
 # machine-local symlink to ORESoftware/my-ai AGENTS.md; never committed
 .ores/
+
+# --- carried over from the grafted branch rescue/orphan-f27a10a1f90b-merge-remote-agent-opto-sync-real-web-te ---
+.astro/
+dist/
+node_modules/
