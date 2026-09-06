@@ -11,3 +11,7 @@ temp/worktrees
 
 # machine-local symlink to ORESoftware/my-ai AGENTS.md; never committed
 .ores/
+
+# --- carried over from the grafted branch rescue/orphan-4c4e6af1fb48-merge-remote-agent-modularize-process-ru ---
+/.env
+/target
