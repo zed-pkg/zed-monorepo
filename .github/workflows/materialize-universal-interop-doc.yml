@@ -1,0 +1,69 @@
+name: materialize universal interoperability RFC
+
+on:
+  pull_request:
+  push:
+    branches:
+      - agent/den-1420-universal-interop-materialize
+
+permissions:
+  contents: read
+
+concurrency:
+  group: universal-interop-materialize-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+
+jobs:
+  materialize:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact helper candidate
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          show-progress: false
+
+      - name: Materialize asserted doc-28 integration
+        run: |
+          set -euo pipefail
+          python3 -B scripts/materialize_universal_interop_doc.py
+          git diff --check
+          test -s docs/28-universal-environment-interop.md
+          grep -Fx '# 28. Universal environment-manager interoperability' \
+            docs/28-universal-environment-interop.md
+          grep -F '| [28](docs/28-universal-environment-interop.md)' README.md
+          ! grep -E 'docs/24-universal-environment-interop|RFC 24|doc 24' \
+            docs/28-universal-environment-interop.md
+
+      - name: Capture resolved documentation
+        if: always()
+        run: |
+          set +e
+          evidence="$RUNNER_TEMP/universal-interop-doc"
+          mkdir -p "$evidence/docs"
+          cp README.md "$evidence/" 2>/dev/null
+          cp docs/28-universal-environment-interop.md "$evidence/docs/" 2>/dev/null
+          git diff --binary > "$evidence/semantic-doc.patch" 2>&1
+          sha256sum README.md docs/28-universal-environment-interop.md \
+            > "$evidence/sha256sums.txt" 2>/dev/null
+          git status --porcelain=v1 --untracked-files=all \
+            > "$evidence/repository-status.txt" 2>&1
+
+      - name: Upload resolved documentation
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: universal-interop-doc-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/universal-interop-doc
+          if-no-files-found: error
+          retention-days: 7
+          include-hidden-files: false

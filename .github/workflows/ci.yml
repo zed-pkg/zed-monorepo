@@ -1,0 +1,82 @@
+name: ci
+
+# These docs cite exact source files in sibling repos. Code moves and those
+# citations rot silently — a reader finds the 404, nobody else does. So CI
+# checks every deep-link against real checkouts of the repos it cites.
+#
+# Sibling repos move without any commit landing here, which is what the
+# nightly run is for; workflow_dispatch re-checks on demand after a sibling
+# renames or relocates something.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 7 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zed-docs-links-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          path: zed-docs
+          persist-credentials: false
+      # The repos these docs deep-link into. Checked out as siblings so the
+      # checker resolves paths locally instead of hitting the network.
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: zed-pkg/zed-interfaces
+          path: zed-interfaces
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: zed-pkg/zed-cli
+          path: zed-cli
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: zed-pkg/zed-api-server.rs
+          path: zed-api-server.rs
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: zed-pkg/zed-web-server.rs
+          path: zed-web-server.rs
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: zed-pkg/zed-clients
+          path: zed-clients
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: zed-pkg/zed-sync
+          path: zed-sync
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: zed-pkg/zed-infra
+          path: zed-infra
+          persist-credentials: false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: zed-pkg/zed-e2e
+          path: zed-e2e
+          persist-credentials: false
+
+      - name: Check cross-repo deep-links
+        run: python3 zed-docs/scripts/check-links.py "$GITHUB_WORKSPACE"
+
+      - name: Validate GitHub organization project registry
+        run: python3 zed-docs/scripts/check-github-linear-project-registry.py

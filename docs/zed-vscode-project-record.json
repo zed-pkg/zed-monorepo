@@ -1,0 +1,29 @@
+{
+  "schema": "zed-pkg/project-tracking/v1",
+  "title": "Publish and ship the zed-vscode package-insights extension",
+  "github_organization": "zed-pkg",
+  "repository": "zed-pkg/zed-vscode",
+  "linear_project": "github.com/zed-pkg",
+  "linear_issue": "DEN-2278",
+  "related_linear_issue": "DEN-2175",
+  "github_project_title": "zed-pkg-project",
+  "initial_candidate_sha": "376372168e12ddd0d2f3cf873a120671d64ca422",
+  "tracking_candidate_sha": "7fe04d03d5c16c45381aff23eec4e8c6c441ec31",
+  "status": "Blocked",
+  "gate": "Create the organization repository and GitHub Projects-v2 item from an authenticated gh runtime, then run exact-head CI and publish a retained VSIX artifact.",
+  "required_evidence": [
+    "pull_request",
+    "candidate_sha",
+    "terminal_required_checks",
+    "merge_sha",
+    "workflow_run",
+    "vsix_digest"
+  ],
+  "safety_contract": {
+    "inspection_is_read_only": true,
+    "show_exact_command": true,
+    "show_working_directory": true,
+    "confirmation_required_for_mutation": true,
+    "silent_package_mutation": false
+  }
+}

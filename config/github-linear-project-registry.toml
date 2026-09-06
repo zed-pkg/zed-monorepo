@@ -1,0 +1,66 @@
+schema = "zed.github-linear-project-registry/v1"
+updated_at = "2026-08-05"
+
+[policy]
+linear_project_name = "github.com/<org>"
+github_project_title = "<org>-project"
+github_project_owner = "organization"
+github_project_visibility = "private-or-public-by-org-policy"
+source_of_truth = "this registry plus the linked Linear project"
+operations_runbook = "docs/github-org-delivery-operations.md"
+
+[organizations.zed-pkg]
+github_org_url = "https://github.com/zed-pkg"
+github_app_installation_id = 149270563
+linear_project_id = "9107ce62-1112-43ff-89bc-f442613c4156"
+linear_project_name = "github.com/zed-pkg"
+linear_project_url = "https://linear.app/denman/project/githubcomzed-pkg-5a53230ae6cc"
+github_project_title = "zed-pkg-project"
+github_project_status = "permission-blocked"
+github_project_number = 0
+github_project_url = ""
+canonical_docs_repo = "zed-pkg/zed-docs"
+canonical_delivery_repos = [
+  "zed-pkg/.github",
+  "zed-pkg/zed-cli",
+  "zed-pkg/zed-interfaces",
+  "zed-pkg/zed-lock",
+  "zed-pkg/zed-clients",
+  "zed-pkg/zed-api-server.rs",
+  "zed-pkg/zed-web-server.rs",
+  "zed-pkg/zed-sync",
+  "zed-pkg/zed-infra",
+  "zed-pkg/zed-e2e",
+  "zed-pkg/zed-monorepo",
+  "zed-pkg/zed-docs",
+  "zed-pkg/zed-vscode",
+  "zed-pkg/zed-sublimetext",
+  "zed-pkg/zed-intellij",
+]
+artifact_policy = "commit-addressed Actions artifacts; signed releases only from reviewed tags"
+
+[organizations.zed-pkg-test]
+github_org_url = "https://github.com/zed-pkg-test"
+github_app_installation_id = 149270578
+linear_project_id = "2a3e49af-e2a2-4a1a-9385-f7e9a217a14f"
+linear_project_name = "github.com/zed-pkg-test"
+linear_project_url = "https://linear.app/denman/project/githubcomzed-pkg-test-e0b5db761974"
+github_project_title = "zed-pkg-test-project"
+github_project_status = "permission-blocked"
+github_project_number = 0
+github_project_url = ""
+canonical_docs_repo = "zed-pkg/zed-docs"
+canonical_delivery_repos = [
+  "zed-pkg-test/.github",
+  "zed-pkg-test/zed-pkg-e2e",
+  "zed-pkg-test/nix-export-interop",
+  "zed-pkg-test/manager-interop-e2e",
+  "zed-pkg-test/security-adversarial-e2e",
+  "zed-pkg-test/offline-cache-e2e",
+  "zed-pkg-test/oci-multiplatform-e2e",
+  "zed-pkg-test/concurrent-install-locking",
+  "zed-pkg-test/constraint-solver-blackbox",
+  "zed-pkg-test/registry-api-contract",
+  "zed-pkg-test/registry-browser-e2e",
+]
+artifact_policy = "ephemeral certification artifacts and bounded failure diagnostics; no package publication"

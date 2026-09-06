@@ -1,0 +1,64 @@
+{
+  "schema": "zed-pkg/project-tracking/v1",
+  "title": "Package, publish, and track the zed-sublimetext extension",
+  "github_organization": "zed-pkg",
+  "repository": "zed-pkg/zed-sublimetext",
+  "linear_project": "github.com/zed-pkg",
+  "linear_issue": "DEN-2326",
+  "linear_document": "https://linear.app/denman/document/zed-sublimetext-extension-delivery-and-project-tracking-contract-d848b2cadac8",
+  "github_project_title": "zed-pkg-project",
+  "github_project_status": "permission-blocked",
+  "shared_cli_issue": "zed-pkg/zed-cli#191",
+  "release_issue": "zed-pkg/zed-sublimetext#2",
+  "initial_implementation_sha": "2776656d4c3e24218b1b758f0462190b4fc1f5c6",
+  "python_38_compatibility_sha": "08e8255128d0c138ae2506bc267036584bc5908f",
+  "packaging_pull_request": 1,
+  "packaging_candidate_sha": "1e278d7373c3e138a871b3f09104200addd18138",
+  "merge_sha": "358c746552601d472f7878b43882d9d0bec0bf2b",
+  "post_merge_workflow_run": 31037791942,
+  "post_merge_workflow_status": "success",
+  "artifact": {
+    "id": 8943657193,
+    "name": "ZedPackageInsights-358c746552601d472f7878b43882d9d0bec0bf2b",
+    "size_in_bytes": 28334,
+    "digest": "sha256:69c4adc7c69e00c67bbdf02789ff6959bcafb1546b80a9045bd4e1ce349f0bf4",
+    "expires_at": "2026-09-04T19:17:28Z",
+    "inner_file": "ZedPackageInsights.sublime-package",
+    "inner_size_in_bytes": 30255,
+    "inner_sha256": "b82e2b6b48c6151cbcda6c885f2c847026778ec86e8e64068ec6b8c2d51ed740",
+    "entries": 27,
+    "zip_integrity": "pass",
+    "sorted_entries": true,
+    "unique_entries": true,
+    "fixed_timestamps": true,
+    "vendored_toml_present": true
+  },
+  "local_preflight": {
+    "tests_passed": 18,
+    "deterministic_archive_verified": true,
+    "artifact_sha256": "3446389f72ffcd97286de712726c26397f01cbd268fb402b30bdfe0af7dc02e3",
+    "authoritative_release_artifact": false
+  },
+  "status": "ArtifactPublishedAwaitingDistribution",
+  "gate": "Verify clean-profile installation on supported platforms, publish through Package Control, and add the work to zed-pkg-project when Projects v2 mutation access is available.",
+  "completed_evidence": [
+    "terminal_main_workflow",
+    "actions_artifact_id",
+    "actions_artifact_digest",
+    "inner_package_digest",
+    "deterministic_archive_validation"
+  ],
+  "required_evidence": [
+    "clean_profile_installation",
+    "package_control_publication",
+    "github_project_item"
+  ],
+  "safety_contract": {
+    "inspection_is_read_only": true,
+    "commands_use_argument_arrays": true,
+    "confirmation_required_for_mutation": true,
+    "output_redaction_required": true,
+    "silent_package_mutation": false,
+    "extension_is_not_dependency_resolver": true
+  }
+}

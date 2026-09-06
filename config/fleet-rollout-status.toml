@@ -1,0 +1,150 @@
+schema = 1
+as_of = "2026-08-05"
+default_state = "unavailable-or-unclassified"
+
+# States describe rollout work, not compliance. GitHub Actions and review are
+# still required before any direct-remediation entry can be marked complete.
+
+[[organization]]
+name = "zed-pkg"
+state = "direct-remediation"
+branches = [
+  "zed-clients:agent/polyglot-client-matrix-20260805",
+  "zed-cli:agent/zed-package-edges-20260805",
+  "zed-monorepo:agent/zed-submodule-boundaries-20260805",
+  "zed-docs:agent/org-package-pattern-20260805",
+]
+blockers = ["missing zed-lib repository", "remote CI and review pending"]
+
+[[organization]]
+name = "fiducia-cloud"
+state = "direct-remediation"
+branches = [
+  "fiducia-clients:agent/zed-package-contract-20260805",
+  "fiducia-monorepo:agent/zed-submodule-boundaries-20260805",
+]
+blockers = ["missing fiducia-lib repository", "missing fiducia-cli repository", "remote CI and review pending"]
+
+[[organization]]
+name = "athlet-o"
+state = "direct-remediation"
+branch = "agent/zed-package-contract-20260805"
+repositories = ["athleto-interfaces", "athleto-lib", "athleto-clients", "athleto-cli", "athleto-monorepo"]
+blockers = ["remote CI and review pending"]
+
+[[organization]]
+name = "apostille-me"
+state = "direct-remediation"
+branch = "agent/zed-package-contract-20260805"
+repositories = ["apme-interfaces", "apme-libs", "apme-clients", "apme-cli", "apme-monorepo"]
+blockers = ["remote CI and review pending"]
+
+[[organization]]
+name = "anticaptrad"
+state = "direct-remediation"
+branch = "agent/zed-package-contract-20260805"
+repositories = ["act-interfaces", "act-lib", "act-clients", "act-cli", "act-monorepo"]
+blockers = ["act-lib and act-libs role ambiguity", "remote CI and review pending"]
+
+[[organization]]
+name = "voxletra"
+state = "direct-remediation"
+branch = "agent/zed-package-contract-20260805"
+repositories = ["vxl-interfaces", "vxl-lib", "vxl-clients", "vxl-cli", "vxl-monorepo"]
+blockers = ["remote CI and review pending"]
+
+[[organization]]
+name = "shared-auth"
+state = "direct-remediation"
+branch = "agent/zed-package-contract-20260805"
+repositories = ["shared-auth-interfaces", "shared-auth-lib", "shared-auth-clients", "shared-auth-cli", "shared-auth-monorepo"]
+blockers = ["remote CI and review pending"]
+
+[[organization]]
+name = "agent-pontifex"
+state = "audit-only"
+
+[[organization]]
+name = "akrion-sim"
+state = "audit-only"
+
+[[organization]]
+name = "benefactor-cc"
+state = "audit-only"
+
+[[organization]]
+name = "canonical-cloud"
+state = "audit-only"
+
+[[organization]]
+name = "channelsiege"
+state = "audit-only"
+
+[[organization]]
+name = "declarative-migrations"
+state = "audit-only"
+
+[[organization]]
+name = "embedded-alerts"
+state = "audit-only"
+
+[[organization]]
+name = "evento-globolo"
+state = "audit-only"
+
+[[organization]]
+name = "file-tunnel"
+state = "audit-only"
+
+[[organization]]
+name = "hypesiege"
+state = "audit-only"
+
+[[organization]]
+name = "memebank"
+state = "audit-only"
+
+[[organization]]
+name = "messaging-intel"
+state = "audit-only"
+
+[[organization]]
+name = "meta-agents-demo"
+state = "audit-only"
+
+[[organization]]
+name = "networking-components"
+state = "audit-only"
+
+[[organization]]
+name = "ORESoftware"
+state = "audit-only"
+
+[[organization]]
+name = "opto-sync"
+state = "audit-only"
+
+[[organization]]
+name = "quaestor-ledger"
+state = "audit-only"
+
+[[organization]]
+name = "scintilla-run"
+state = "audit-only"
+
+[[organization]]
+name = "streamkore"
+state = "audit-only"
+
+[[organization]]
+name = "StreemPilot"
+state = "audit-only"
+
+[[organization]]
+name = "usa-acc"
+state = "audit-only"
+
+[requirements]
+submodule_secret = "SUBMODULE_TOKEN"
+repository_creation_supported = false
+remote_ci_verified = false

@@ -1,0 +1,77 @@
+name: organization package-pattern audit
+
+on:
+  pull_request:
+    paths:
+      - "docs/32-org-repository-package-pattern.md"
+      - "scripts/audit_org_package_pattern.py"
+      - "scripts/test_org_package_pattern.py"
+      - "config/org-package-pattern.toml"
+      - ".github/workflows/org-package-pattern.yml"
+  workflow_dispatch:
+    inputs:
+      fail_on:
+        description: Lowest severity that fails the fleet audit
+        required: false
+        default: error
+        type: choice
+        options: [error, warning, never]
+  schedule:
+    - cron: "23 8 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: org-package-pattern-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Unit tests
+        run: python3 scripts/test_org_package_pattern.py
+
+  fleet:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Audit governed organizations
+        id: audit
+        env:
+          # Read-only fine-grained token or GitHub App token with access to the
+          # governed organizations, including private repositories.
+          GH_TOKEN: ${{ secrets.ORG_AUDIT_TOKEN }}
+          FAIL_ON: ${{ inputs.fail_on || 'error' }}
+        run: |
+          test -n "$GH_TOKEN" || {
+            echo "::error::ORG_AUDIT_TOKEN is required for the fleet audit"
+            exit 1
+          }
+          set +e
+          python3 scripts/audit_org_package_pattern.py \
+            --config config/org-package-pattern.toml \
+            --format markdown \
+            --output audit.md \
+            --fail-on "$FAIL_ON"
+          status=$?
+          set -e
+          echo "$status" > audit.status
+      - name: Publish audit summary
+        if: always()
+        run: |
+          if test -f audit.md; then
+            cat audit.md >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Enforce audit result
+        if: always()
+        run: |
+          test -f audit.status
+          exit "$(cat audit.status)"
