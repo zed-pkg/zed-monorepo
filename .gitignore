@@ -11,3 +11,12 @@ temp/worktrees
 
 # machine-local symlink to ORESoftware/my-ai AGENTS.md; never committed
 .ores/
+
+# --- carried over from the grafted branch rescue/orphan-9d13da6dcccb-merge-remote-agent-run-live-cloud-prefli ---
+!*.tfvars.example
+.terraform/
+*.secret.yaml
+*.tfstate
+*.tfstate.*
+*.tfvars
+crash.log
