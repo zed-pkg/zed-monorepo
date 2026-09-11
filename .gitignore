@@ -11,3 +11,11 @@ temp/worktrees
 
 # machine-local symlink to ORESoftware/my-ai AGENTS.md; never committed
 .ores/
+
+# --- carried over from the grafted branch rescue/orphan-9d019325d425-make-the-rust-registry-standalone-and-ce ---
+/_apalache-out
+/.data
+/.env
+/.formal-artifacts
+/.formal-tools
+/target
