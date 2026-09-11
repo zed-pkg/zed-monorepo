@@ -1,0 +1,31 @@
+{
+  "schema": "zed-pkg/project-tracking/v1",
+  "organizations": [
+    {
+      "github_organization": "zed-pkg",
+      "linear_project": "github.com/zed-pkg",
+      "github_project_title": "zed-pkg-project"
+    },
+    {
+      "github_organization": "zed-pkg-test",
+      "linear_project": "github.com/zed-pkg",
+      "github_project_title": "zed-pkg-test-project"
+    }
+  ],
+  "required_fields": [
+    "title",
+    "repository",
+    "linear_issue",
+    "pull_request",
+    "candidate_sha",
+    "status",
+    "gate",
+    "evidence"
+  ],
+  "terminal_status": "Done",
+  "done_requires": [
+    "merged_reviewed_head_or_published_non_code_artifact",
+    "terminal_required_checks",
+    "no_unresolved_review_threads"
+  ]
+}

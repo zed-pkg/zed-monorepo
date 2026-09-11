@@ -1,0 +1,116 @@
+name: superseded PR salvage
+
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize, ready_for_review]
+  workflow_call:
+    inputs:
+      pr_body:
+        description: Pull-request body to validate
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: superseded-pr-salvage-${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Validate predecessor salvage traceability
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    env:
+      PR_BODY: ${{ inputs.pr_body || github.event.pull_request.body || '' }}
+    steps:
+      - name: Require one salvaged item from every superseded PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os
+          import re
+          import sys
+
+          body = os.environ.get("PR_BODY", "")
+          errors = []
+
+          heading_count = len(re.findall(r"(?mi)^##\s+Superseded PR salvage\s*$", body))
+          if heading_count != 1:
+              errors.append("add exactly one `## Superseded PR salvage` section")
+
+          statuses = re.findall(r"(?mi)^\s*Supersedes:\s*(\S+)\s*$", body)
+          if len(statuses) != 1:
+              errors.append("add exactly one `Supersedes: none` or `Supersedes: yes` line")
+              status = None
+          else:
+              status = statuses[0].lower()
+              if status not in {"none", "yes"}:
+                  errors.append("the Supersedes value must be exactly `none` or `yes`")
+
+          lines = body.splitlines()
+          predecessor_indexes = [
+              index
+              for index, line in enumerate(lines)
+              if re.match(r"^\s*-\s*Predecessor:\s*", line, re.IGNORECASE)
+          ]
+
+          if status == "none" and predecessor_indexes:
+              errors.append("remove predecessor blocks or change `Supersedes: none` to `Supersedes: yes`")
+
+          if status == "yes" and not predecessor_indexes:
+              errors.append("list every replaced PR with Predecessor, Salvaged, and Incorporated at fields")
+
+          placeholder = re.compile(r"(?i)^(?:todo|tbd|none|n/a|describe\b|identify\b|<.*>)")
+          reference = re.compile(r"^(?:#\d+|https://github\.com/[^/]+/[^/]+/pull/\d+)$")
+
+          for position, start in enumerate(predecessor_indexes):
+              end = predecessor_indexes[position + 1] if position + 1 < len(predecessor_indexes) else len(lines)
+              for index in range(start + 1, end):
+                  if re.match(r"^##\s+", lines[index]):
+                      end = index
+                      break
+
+              predecessor = re.sub(
+                  r"^\s*-\s*Predecessor:\s*",
+                  "",
+                  lines[start],
+                  flags=re.IGNORECASE,
+              ).strip()
+              if not reference.match(predecessor):
+                  errors.append(
+                      f"predecessor block {position + 1} needs a repository-local `#123` or full GitHub pull URL"
+                  )
+
+              salvaged = None
+              incorporated = None
+              for line in lines[start + 1 : end]:
+                  salvaged_match = re.match(r"^\s+Salvaged:\s*(.+?)\s*$", line, re.IGNORECASE)
+                  if salvaged_match:
+                      salvaged = salvaged_match.group(1).strip()
+                  incorporated_match = re.match(
+                      r"^\s+Incorporated at:\s*(.+?)\s*$", line, re.IGNORECASE
+                  )
+                  if incorporated_match:
+                      incorporated = incorporated_match.group(1).strip()
+
+              if not salvaged or placeholder.match(salvaged):
+                  errors.append(f"predecessor block {position + 1} needs a concrete `Salvaged:` item")
+              if not incorporated or placeholder.match(incorporated):
+                  errors.append(
+                      f"predecessor block {position + 1} needs a traceable `Incorporated at:` location"
+                  )
+
+          if errors:
+              print("Superseded PR salvage policy failed:", file=sys.stderr)
+              for error in errors:
+                  print(f"- {error}", file=sys.stderr)
+              sys.exit(1)
+
+          if status == "none":
+              print("No superseded pull requests declared.")
+          else:
+              print(f"Validated {len(predecessor_indexes)} superseded pull-request salvage block(s).")
+          PY

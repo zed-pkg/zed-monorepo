@@ -1,0 +1,89 @@
+{
+  "schema": "zed-pkg/ide-parity-record/v1",
+  "updated_at": "2026-08-05",
+  "linear_issue": "DEN-2508",
+  "github_project": "zed-pkg-project",
+  "shared_cli_issue": "zed-pkg/zed-cli#191",
+  "promotion_issue": "zed-pkg/.github#28",
+  "levels": ["core", "native-shell", "distribution"],
+  "integrations": {
+    "sublimetext": {
+      "repository": "zed-pkg/zed-sublimetext",
+      "status": "live",
+      "core": "pass",
+      "native_shell": "pass",
+      "distribution": "partial",
+      "merge_sha": "c3153867dff0b560946c9b7e287ed50366b87e6c",
+      "remaining": ["clean-profile-platform-tests", "package-control-publication"]
+    },
+    "jetbrains": {
+      "repository": "zed-pkg/zed-intellij",
+      "status": "live",
+      "core": "pass",
+      "native_shell": "pass",
+      "distribution": "partial",
+      "merge_sha": "7282fdbc7046bb2ba58369b59ef627211033e145",
+      "remaining": ["clean-instance-publication-evidence", "marketplace-publication"]
+    },
+    "vscode": {
+      "source": "zed-pkg/.github/blueprints/zed-vscode",
+      "target_repository": "zed-pkg/zed-vscode",
+      "status": "candidate",
+      "core": "pass",
+      "native_shell": "candidate-pass",
+      "distribution": "partial",
+      "vsix_artifact_id": 8947482937,
+      "vsix_sha256": "5cf6bec8304cc0de2f96c71533d4c27978c6a053bc759bb67a86a42cd0f51b63",
+      "remaining": ["dedicated-repository", "extension-host-gui-tests", "signing", "marketplace-publication"]
+    },
+    "qtcreator": {
+      "source": "zed-pkg/.github/blueprints/zed-qtcreator",
+      "target_repository": "zed-pkg/zed-qtcreator",
+      "status": "candidate",
+      "core": "pass",
+      "native_shell": "missing",
+      "distribution": "missing",
+      "remaining": ["dedicated-repository", "iplugin-shell", "projectexplorer-issues-ui", "clean-instance-tests", "plugin-package"]
+    },
+    "xcode": {
+      "source": "zed-pkg/.github/blueprints/zed-xcode",
+      "target_repository": "zed-pkg/zed-xcode",
+      "status": "candidate",
+      "core": "pass",
+      "native_shell": "missing",
+      "distribution": "missing",
+      "remaining": ["dedicated-repository", "companion-app", "source-editor-extension", "entitlements-signing", "clean-xcode-tests"]
+    },
+    "eclipse": {
+      "source": "zed-pkg/.github/blueprints/zed-eclipse",
+      "target_repository": "zed-pkg/zed-eclipse",
+      "status": "candidate",
+      "core": "pass",
+      "native_shell": "missing",
+      "distribution": "missing",
+      "remaining": ["dedicated-repository", "pde-osgi-shell", "view-markers-quick-fixes", "plugin-application-tests", "p2-publication"]
+    },
+    "visual-studio": {
+      "source": "zed-pkg/.github/blueprints/zed-visual-studio",
+      "target_repository": "zed-pkg/zed-visual-studio",
+      "status": "candidate",
+      "core": "pass",
+      "native_shell": "missing",
+      "distribution": "missing",
+      "remaining": ["dedicated-repository", "async-package", "tool-window-error-list", "experimental-instance-tests", "signed-vsix"]
+    }
+  },
+  "evidence": {
+    "candidate_merge_sha": "051c897578657f8993924f4ecd2a176f4448d404",
+    "candidate_workflow_run": 31048652586,
+    "sandbox_merge_sha": "ee7d220807008e9222bbe80e2efbf3c39b21dfc7",
+    "sandbox_workflow_run": 31048735205,
+    "sandbox_artifacts": {
+      "jetbrains": {"id": 8947719871, "digest": "sha256:dddae7f19f18088dadd6d47dd8192786e20a11be6c6dee8fc725491b82fa46b9"},
+      "vscode": {"id": 8947511633, "digest": "sha256:1e814606946f3a7a4fef1e56341d5e7d200d1f011b24bd3dbaaef8a9adc5e678"},
+      "sublime_3_8": {"id": 8947510120, "digest": "sha256:6c801d6cee4a163f2a16734ac013655581794314ef865853b5381570e9baba21"},
+      "sublime_3_14": {"id": 8947509853, "digest": "sha256:6c801d6cee4a163f2a16734ac013655581794314ef865853b5381570e9baba21"}
+    }
+  },
+  "overall_status": "core-parity-certified-distribution-incomplete"
+}

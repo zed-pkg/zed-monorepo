@@ -1,0 +1,115 @@
+version = 1
+
+orgs = [
+  "3FA-app",
+  "OmniBlitz",
+  "StreemPilot",
+  "agent-pontifex",
+  "akrion-sim",
+  "anticaptrad",
+  "apostille-me",
+  "athlet-o",
+  "benefactor-cc",
+  "canonical-cloud",
+  "channelsiege",
+  "claritas-viz",
+  "cliptown",
+  "daedalus-fab",
+  "declarative-migrations",
+  "discrete-event-systems",
+  "drone-mngr",
+  "embedded-alerts",
+  "evento-globolo",
+  "fanwaave",
+  "fiducia-cloud",
+  "fifa-math",
+  "file-tunnel",
+  "gha-indie-worker",
+  "hacker-house-medellin",
+  "hypeblitz",
+  "hypesiege",
+  "led-dynamo",
+  "memebank",
+  "messaging-intel",
+  "meta-agents-demo",
+  "networking-components",
+  "opto-sync",
+  "quaestor-ledger",
+  "sagitta-stack",
+  "scintilla-run",
+  "shared-auth",
+  "sonus-auris",
+  "streamkore",
+  "unreal-unity-poc",
+  "usa-acc",
+  "voxletra",
+  "zed-pkg",
+]
+
+exclude_org_regex = ["-test$"]
+
+# Abbreviated and legacy repository names that cannot be inferred from suffixes.
+
+[[overrides]]
+org = "3FA-app"
+prefix = "3fa"
+interfaces = "3fa-interfaces"
+clients = "3fa-clients"
+monorepo = "threefa-monorepo"
+mobile = true
+
+[[overrides]]
+org = "messaging-intel"
+prefix = "msgint"
+clients = "msgint-clients"
+
+[[overrides]]
+org = "athlet-o"
+prefix = "athleto"
+clients = "athleto-clients"
+mobile = true
+
+[[overrides]]
+org = "anticaptrad"
+prefix = "act"
+clients = "act-clients"
+
+[[overrides]]
+org = "file-tunnel"
+prefix = "ftnl"
+clients = "ftnl-clients"
+
+[[overrides]]
+org = "voxletra"
+prefix = "vxl"
+clients = "vxl-clients"
+mobile = true
+
+[[overrides]]
+org = "apostille-me"
+prefix = "apme"
+clients = "apme-clients"
+lib = "apme-libs"
+
+[[overrides]]
+org = "embedded-alerts"
+prefix = "eal"
+clients = "eal-clients"
+
+[[overrides]]
+org = "evento-globolo"
+prefix = "evgl"
+clients = "evgl-clients"
+
+[[overrides]]
+org = "hacker-house-medellin"
+prefix = "hhm"
+clients = "hhm-clients"
+
+[[overrides]]
+org = "zed-pkg"
+prefix = "zed"
+interfaces = "zed-interfaces"
+clients = "zed-clients"
+cli = "zed-cli"
+monorepo = "zed-monorepo"
