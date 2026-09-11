@@ -1,0 +1,37 @@
+{
+  "name": "zed-e2e",
+  "version": "0.1.0",
+  "private": true,
+  "description": "End-to-end tests for the zed-pkg registry: drives the Rust web server, Rust API server, and the zed CLI with Playwright, Puppeteer, and Selenium.",
+  "type": "module",
+  "scripts": {
+    "e2e": "npm run e2e:playwright && npm run e2e:puppeteer && npm run e2e:selenium",
+    "e2e:auth": "playwright test suites/playwright/cli-auth.spec.ts",
+    "test:harness": "tsx --test harness/*.test.ts",
+    "e2e:playwright": "playwright test",
+    "e2e:puppeteer": "tsx --test --test-concurrency=1 suites/puppeteer/*.test.ts",
+    "e2e:selenium": "tsx --test --test-concurrency=1 suites/selenium/*.test.ts",
+    "e2e:cluster-grid": "node --test suites/cluster-grid/*.test.mjs",
+    "stack:up": "tsx harness/stack-cli.ts up",
+    "stack:down": "tsx harness/stack-cli.ts down",
+    "cluster:up": "bash cluster/up.sh",
+    "cluster:up:argocd": "bash cluster/up.sh --argocd",
+    "cluster:down": "bash cluster/down.sh",
+    "cluster:test-cli": "bash cluster/test-cli.sh",
+    "cluster:e2e": "bash cluster/e2e.sh",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run e2e",
+    "cluster:remote-grid": "bash cluster/remote-grid.sh"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.1",
+    "@types/selenium-webdriver": "^4.35.6",
+    "playwright": "^1.61.1",
+    "puppeteer": "^25.3.0",
+    "selenium-webdriver": "^4.46.0",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2"
+  }
+}
