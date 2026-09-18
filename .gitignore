@@ -20,3 +20,7 @@ dart/**/.dart_tool/
 dart/**/build/
 dart/**/pubspec.lock
 node_modules/
+
+# Sanctioned scratch locations - AGENTS.md requires both, trailing-slash form
+tmp/
+temp/
