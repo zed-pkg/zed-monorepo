@@ -1,0 +1,208 @@
+{
+  "protocol_version": 1,
+  "_comment": "Shared golden cases. The Rust core (tests/conformance.rs), the JS core mirror (sdk/test/conformance.test.mjs), and the Dart core (dart/zed_sync/test) all run these so every language port agrees. Versions are HLC objects {wall_ms, counter, actor}.",
+  "reconcile": [
+    {
+      "name": "first upsert applies",
+      "local": null,
+      "incoming": { "table": "products", "op": "upsert", "id": "p1", "version": { "wall_ms": 1000, "counter": 0, "actor": "srv" }, "row": { "id": "p1" }, "at_ms": 1000 },
+      "expected": "Apply"
+    },
+    {
+      "name": "first delete is already applied",
+      "local": null,
+      "incoming": { "table": "products", "op": "delete", "id": "p1", "version": { "wall_ms": 1000, "counter": 0, "actor": "srv" }, "row": null, "at_ms": 1000 },
+      "expected": { "Ignore": "AlreadyApplied" }
+    },
+    {
+      "name": "older server state is stale",
+      "local": { "version": { "wall_ms": 2000, "counter": 0, "actor": "srv" }, "dirty": false },
+      "incoming": { "table": "orders", "op": "upsert", "id": "o1", "version": { "wall_ms": 1000, "counter": 0, "actor": "srv" }, "row": { "id": "o1" }, "at_ms": 1000 },
+      "expected": { "Ignore": "Stale" }
+    },
+    {
+      "name": "same version is idempotent",
+      "local": { "version": { "wall_ms": 2000, "counter": 3, "actor": "srv" }, "dirty": false },
+      "incoming": { "table": "orders", "op": "upsert", "id": "o1", "version": { "wall_ms": 2000, "counter": 3, "actor": "srv" }, "row": { "id": "o1" }, "at_ms": 2000 },
+      "expected": { "Ignore": "AlreadyApplied" }
+    },
+    {
+      "name": "higher counter same wall applies over clean",
+      "local": { "version": { "wall_ms": 2000, "counter": 3, "actor": "srv" }, "dirty": false },
+      "incoming": { "table": "orders", "op": "upsert", "id": "o1", "version": { "wall_ms": 2000, "counter": 4, "actor": "srv" }, "row": { "id": "o1" }, "at_ms": 2000 },
+      "expected": "Apply"
+    },
+    {
+      "name": "newer server state applies over clean local",
+      "local": { "version": { "wall_ms": 2000, "counter": 0, "actor": "srv" }, "dirty": false },
+      "incoming": { "table": "orders", "op": "upsert", "id": "o1", "version": { "wall_ms": 3000, "counter": 0, "actor": "srv" }, "row": { "id": "o1" }, "at_ms": 3000 },
+      "expected": "Apply"
+    },
+    {
+      "name": "newer server state conflicts with dirty local",
+      "local": { "version": { "wall_ms": 2000, "counter": 0, "actor": "dev" }, "dirty": true },
+      "incoming": { "table": "orders", "op": "upsert", "id": "o1", "version": { "wall_ms": 3000, "counter": 0, "actor": "srv" }, "row": { "id": "o1" }, "at_ms": 3000 },
+      "expected": "Conflict"
+    },
+    {
+      "name": "actor breaks equal wall+counter as newer",
+      "local": { "version": { "wall_ms": 2000, "counter": 1, "actor": "aaa" }, "dirty": false },
+      "incoming": { "table": "orders", "op": "upsert", "id": "o1", "version": { "wall_ms": 2000, "counter": 1, "actor": "bbb" }, "row": { "id": "o1" }, "at_ms": 2000 },
+      "expected": "Apply"
+    },
+    {
+      "name": "actor breaks equal wall+counter as older",
+      "local": { "version": { "wall_ms": 2000, "counter": 1, "actor": "bbb" }, "dirty": false },
+      "incoming": { "table": "orders", "op": "upsert", "id": "o1", "version": { "wall_ms": 2000, "counter": 1, "actor": "aaa" }, "row": { "id": "o1" }, "at_ms": 2000 },
+      "expected": { "Ignore": "Stale" }
+    },
+    {
+      "name": "higher wall beats higher counter",
+      "local": { "version": { "wall_ms": 2000, "counter": 9, "actor": "srv" }, "dirty": false },
+      "incoming": { "table": "orders", "op": "upsert", "id": "o1", "version": { "wall_ms": 3000, "counter": 0, "actor": "srv" }, "row": { "id": "o1" }, "at_ms": 3000 },
+      "expected": "Apply"
+    },
+    {
+      "name": "newer delete applies over clean local",
+      "local": { "version": { "wall_ms": 2000, "counter": 0, "actor": "srv" }, "dirty": false },
+      "incoming": { "table": "orders", "op": "delete", "id": "o1", "version": { "wall_ms": 3000, "counter": 0, "actor": "srv" }, "row": null, "at_ms": 3000 },
+      "expected": "Apply"
+    },
+    {
+      "name": "newer delete conflicts with dirty local",
+      "local": { "version": { "wall_ms": 2000, "counter": 0, "actor": "dev" }, "dirty": true },
+      "incoming": { "table": "orders", "op": "delete", "id": "o1", "version": { "wall_ms": 3000, "counter": 0, "actor": "srv" }, "row": null, "at_ms": 3000 },
+      "expected": "Conflict"
+    },
+    {
+      "name": "stale delete is ignored",
+      "local": { "version": { "wall_ms": 2000, "counter": 0, "actor": "srv" }, "dirty": false },
+      "incoming": { "table": "orders", "op": "delete", "id": "o1", "version": { "wall_ms": 1000, "counter": 0, "actor": "srv" }, "row": null, "at_ms": 1000 },
+      "expected": { "Ignore": "Stale" }
+    },
+    {
+      "name": "same version on dirty local is already applied, not a conflict",
+      "local": { "version": { "wall_ms": 2000, "counter": 3, "actor": "dev" }, "dirty": true },
+      "incoming": { "table": "orders", "op": "upsert", "id": "o1", "version": { "wall_ms": 2000, "counter": 3, "actor": "dev" }, "row": { "id": "o1" }, "at_ms": 2000 },
+      "expected": { "Ignore": "AlreadyApplied" }
+    },
+    {
+      "name": "stale incoming vs dirty local is stale, not a conflict",
+      "local": { "version": { "wall_ms": 2000, "counter": 0, "actor": "dev" }, "dirty": true },
+      "incoming": { "table": "orders", "op": "upsert", "id": "o1", "version": { "wall_ms": 1000, "counter": 0, "actor": "srv" }, "row": { "id": "o1" }, "at_ms": 1000 },
+      "expected": { "Ignore": "Stale" }
+    }
+  ],
+  "echoes": [
+    {
+      "name": "matching write_key is our echo",
+      "queued": { "table": "carts", "id": "c1", "op": "upsert", "base_version": { "wall_ms": 10, "counter": 0, "actor": "dev" }, "key": "k-abc" },
+      "incoming": { "table": "carts", "op": "upsert", "id": "c1", "version": { "wall_ms": 20, "counter": 0, "actor": "srv" }, "row": { "id": "c1" }, "at_ms": 20, "write_key": "k-abc" },
+      "expected": true
+    },
+    {
+      "name": "different write_key is not our echo even at expected version",
+      "queued": { "table": "carts", "id": "c1", "op": "upsert", "base_version": { "wall_ms": 10, "counter": 0, "actor": "dev" }, "key": "k-abc" },
+      "incoming": { "table": "carts", "op": "upsert", "id": "c1", "version": { "wall_ms": 20, "counter": 0, "actor": "srv" }, "row": { "id": "c1" }, "at_ms": 20, "write_key": "k-other" },
+      "expected": false
+    },
+    {
+      "name": "missing write_key is not our echo",
+      "queued": { "table": "carts", "id": "c1", "op": "upsert", "base_version": { "wall_ms": 10, "counter": 0, "actor": "dev" }, "key": "k-abc" },
+      "incoming": { "table": "carts", "op": "upsert", "id": "c1", "version": { "wall_ms": 20, "counter": 0, "actor": "srv" }, "row": { "id": "c1" }, "at_ms": 20 },
+      "expected": false
+    },
+    {
+      "name": "mismatched id is not our echo",
+      "queued": { "table": "carts", "id": "c1", "op": "upsert", "base_version": { "wall_ms": 10, "counter": 0, "actor": "dev" }, "key": "k-abc" },
+      "incoming": { "table": "carts", "op": "upsert", "id": "c2", "version": { "wall_ms": 20, "counter": 0, "actor": "srv" }, "row": { "id": "c2" }, "at_ms": 20, "write_key": "k-abc" },
+      "expected": false
+    },
+    {
+      "name": "mismatched op is not our echo even with our key",
+      "queued": { "table": "carts", "id": "c1", "op": "upsert", "base_version": { "wall_ms": 10, "counter": 0, "actor": "dev" }, "key": "k-abc" },
+      "incoming": { "table": "carts", "op": "delete", "id": "c1", "version": { "wall_ms": 20, "counter": 0, "actor": "srv" }, "row": null, "at_ms": 20, "write_key": "k-abc" },
+      "expected": false
+    },
+    {
+      "name": "mismatched table is not our echo even with our key",
+      "queued": { "table": "carts", "id": "c1", "op": "upsert", "base_version": { "wall_ms": 10, "counter": 0, "actor": "dev" }, "key": "k-abc" },
+      "incoming": { "table": "orders", "op": "upsert", "id": "c1", "version": { "wall_ms": 20, "counter": 0, "actor": "srv" }, "row": { "id": "c1" }, "at_ms": 20, "write_key": "k-abc" },
+      "expected": false
+    }
+  ],
+  "acks": [
+    {
+      "name": "adopt committed version when local has not advanced",
+      "local": { "version": { "wall_ms": 10, "counter": 0, "actor": "dev" }, "dirty": true },
+      "ack": { "id": "c1", "committed_version": { "wall_ms": 20, "counter": 0, "actor": "srv" } },
+      "expected": { "Adopt": { "wall_ms": 20, "counter": 0, "actor": "srv" } }
+    },
+    {
+      "name": "superseded when local already advanced past the ack",
+      "local": { "version": { "wall_ms": 30, "counter": 0, "actor": "dev" }, "dirty": true },
+      "ack": { "id": "c1", "committed_version": { "wall_ms": 20, "counter": 0, "actor": "srv" } },
+      "expected": "Superseded"
+    },
+    {
+      "name": "equal committed version adopts, not superseded",
+      "local": { "version": { "wall_ms": 20, "counter": 0, "actor": "srv" }, "dirty": true },
+      "ack": { "id": "c1", "committed_version": { "wall_ms": 20, "counter": 0, "actor": "srv" } },
+      "expected": { "Adopt": { "wall_ms": 20, "counter": 0, "actor": "srv" } }
+    },
+    {
+      "name": "higher local counter at the same wall supersedes",
+      "local": { "version": { "wall_ms": 20, "counter": 2, "actor": "dev" }, "dirty": true },
+      "ack": { "id": "c1", "committed_version": { "wall_ms": 20, "counter": 1, "actor": "srv" } },
+      "expected": "Superseded"
+    }
+  ],
+  "clock": {
+    "_comment": "Hybrid Logical Clock behavior — the piece that used to be tested per-language and drifted (Dart once lacked the over-drift clamp). Each case starts from a fresh clock (wall_ms=0, counter=0, the given actor) and applies `ops` in order. An op is either {tick, expect} (advance for a local event at wall-clock `tick` ms) or {observe, now, expect} (fold in remote stamp `observe` at local wall-clock `now`). `expect` is the whole resulting HLC. Run identically by Rust (src/hlc.rs), JS (sdk/src/hlc.mjs), and Dart (dart/.../hlc.dart).",
+    "maxDriftMs": 300000,
+    "cases": [
+      {
+        "name": "tick is monotonic even when the wall clock steps backwards",
+        "actor": "a",
+        "ops": [
+          { "tick": 2000, "expect": { "wall_ms": 2000, "counter": 0, "actor": "a" } },
+          { "tick": 1500, "expect": { "wall_ms": 2000, "counter": 1, "actor": "a" } },
+          { "tick": 2000, "expect": { "wall_ms": 2000, "counter": 2, "actor": "a" } },
+          { "tick": 2001, "expect": { "wall_ms": 2001, "counter": 0, "actor": "a" } }
+        ]
+      },
+      {
+        "name": "observe folds an in-range remote that is ahead of local",
+        "actor": "a",
+        "ops": [
+          { "tick": 1000, "expect": { "wall_ms": 1000, "counter": 0, "actor": "a" } },
+          { "observe": { "wall_ms": 1050, "counter": 2, "actor": "b" }, "now": 1000, "expect": { "wall_ms": 1050, "counter": 3, "actor": "a" } }
+        ]
+      },
+      {
+        "name": "observe at an equal wall takes max(counter)+1",
+        "actor": "a",
+        "ops": [
+          { "tick": 1050, "expect": { "wall_ms": 1050, "counter": 0, "actor": "a" } },
+          { "observe": { "wall_ms": 1050, "counter": 4, "actor": "b" }, "now": 1000, "expect": { "wall_ms": 1050, "counter": 5, "actor": "a" } }
+        ]
+      },
+      {
+        "name": "observe advances to local now when both local and remote are behind it",
+        "actor": "a",
+        "ops": [
+          { "tick": 1000, "expect": { "wall_ms": 1000, "counter": 0, "actor": "a" } },
+          { "observe": { "wall_ms": 900, "counter": 9, "actor": "b" }, "now": 2000, "expect": { "wall_ms": 2000, "counter": 0, "actor": "a" } }
+        ]
+      },
+      {
+        "name": "observe CLAMPS a far-future poison remote to now (never past now + maxDriftMs)",
+        "actor": "a",
+        "ops": [
+          { "tick": 1000, "expect": { "wall_ms": 1000, "counter": 0, "actor": "a" } },
+          { "observe": { "wall_ms": 9999999999999, "counter": 0, "actor": "attacker" }, "now": 2000, "expect": { "wall_ms": 2000, "counter": 0, "actor": "a" } }
+        ]
+      }
+    ]
+  }
+}

@@ -11,3 +11,16 @@ temp/worktrees
 
 # machine-local symlink to ORESoftware/my-ai AGENTS.md; never committed
 .ores/
+
+# --- carried over from the grafted branch rescue/orphan-2198878f2748-merge-remote-fix-den-359-nix-wasm-contra ---
+.cache/
+/target
+Cargo.lock
+dart/**/.dart_tool/
+dart/**/build/
+dart/**/pubspec.lock
+node_modules/
+
+# Sanctioned scratch locations - AGENTS.md requires both, trailing-slash form
+tmp/
+temp/
