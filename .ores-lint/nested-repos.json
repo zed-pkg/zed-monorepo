@@ -1,0 +1,12 @@
+[
+ "apps/zed-api-server.rs",
+ "apps/zed-cli",
+ "apps/zed-clients",
+ "apps/zed-docs",
+ "apps/zed-e2e",
+ "apps/zed-infra",
+ "apps/zed-interfaces",
+ "apps/zed-pkg.github.io",
+ "apps/zed-sync",
+ "apps/zed-web-server.rs"
+]
